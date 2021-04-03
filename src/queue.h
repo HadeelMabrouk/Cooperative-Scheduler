@@ -62,33 +62,41 @@ void pop(Node** head)
 void push(Node** head, fptr f, int p)
 {
     Node* start = (*head);
- 
+
     // Create new Node
     Node* temp = newNode(f, p);
  
-    // Special Case: The head of list has lesser
-    // priority than new node. So insert new
-    // node before head node and change head node.
-    if ((*head)->priority > p) {
- 
-        // Insert New Node before head
-        temp->next = *head;
+    if(!isEmpty(head))
+    {
+        // Special Case: The head of list has lesser
+        // priority than new node. So insert new
+        // node before head node and change head node.
+        if ((*head)->priority > p) {
+     
+            // Insert New Node before head
+            temp->next = *head;
+            (*head) = temp;
+        }
+        else {
+     
+            // Traverse the list and find a
+            // position to insert new node
+            while (start->next != NULL &&
+                start->next->priority < p) {
+                start = start->next;
+            }
+     
+            // Either at the ends of the list
+            // or at required position
+            temp->next = start->next;
+            start->next = temp;
+        }
+    }
+    else
+    {
         (*head) = temp;
     }
-    else {
- 
-        // Traverse the list and find a
-        // position to insert new node
-        while (start->next != NULL &&
-            start->next->priority < p) {
-            start = start->next;
-        }
- 
-        // Either at the ends of the list
-        // or at required position
-        temp->next = start->next;
-        start->next = temp;
-    }
+    
 }
  
 // Function to check is list is empty
@@ -98,4 +106,3 @@ int isEmpty(Node** head)
 }
 
 #endif
- 
