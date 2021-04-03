@@ -22,9 +22,10 @@ void QueTask(Node** head,fptr f, int p)
 
 Node* Init(void)
 {
-    Node* pq = newNode(f1, 1);
-    pop(&pq);
-    return pq;
+    Node* temp = (Node*)malloc(sizeof(Node));
+    temp = NULL;
+    
+    return temp;
 }
  
  
@@ -42,14 +43,15 @@ int main()
 {
     // Create a Priority Queue
     // fn1->fn2->fn3
-    Node* pq = newNode(f1, 1);
-    //pop(&pq);
+    Node* pq = Init();
+        
+    QueTask(&pq, f1, 1);
     QueTask(&pq, f2, 2);
     QueTask(&pq, f3, 3);
- 
-    while (!isEmpty(&pq)) {
+    
+
+  while (!isEmpty(&pq)) {
         Dispatch(&pq);
     }
- 
     return 0;
 }
