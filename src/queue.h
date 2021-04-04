@@ -27,11 +27,6 @@ void pop(Node** head);
 void push(Node** head, fptr f, int p);
 int isEmpty(Node** head);
 
-
-void f1(void);
-void f2(void);
-void f3(void);
-
 // Function to Create A New Node
 Node* newNode(fptr f, int p)
 {
@@ -104,5 +99,7 @@ int isEmpty(Node** head)
 {
     return (*head) == NULL;
 }
+
+
 
 #endif
