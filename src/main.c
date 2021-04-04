@@ -1,105 +1,72 @@
-#ifndef HEADER_FILE
-#define HEADER_FILE
-
-// C code to implement Priority Queue
-// using Linked List
 #include <stdio.h>
 #include <stdlib.h>
+#include "queue.h"
 
- 
-// Node
-typedef void (*fptr)(void);
+void Dispatch(Node** head);
+void QueTask(Node** head,fptr f, int p);
+Node* Init(void);
+void DereasePriorities(Node** head);
 
-typedef struct node {
-    
-	  fptr fn;
-    // Lower values indicate higher priority
-    int priority;
- 
-    struct node* next;
- 
-} Node;
- 
+void f1(void);
+void f2(void);
+void f3(void);
 
-Node* newNode(fptr f, int p);
-fptr peek(Node** head);
-void pop(Node** head);
-void push(Node** head, fptr f, int p);
-int isEmpty(Node** head);
 
-// Function to Create A New Node
-Node* newNode(fptr f, int p)
+void Dispatch(Node** head)
+{
+    fptr e;
+    e = peek(head);
+    pop(head);
+    (*e)();
+}
+
+void QueTask(Node** head,fptr f, int p)
+{
+    push(head, f, p);
+}
+
+Node* Init(void)
 {
     Node* temp = (Node*)malloc(sizeof(Node));
-    temp->fn = f;
-    temp->priority = p;
-    temp->next = NULL;
- 
+    temp = NULL;
+    
     return temp;
 }
- 
-// Return the value at head
-fptr peek(Node** head)
-{
-    return (*head)->fn;
-}
- 
-// Removes the element with the
-// highest priority form the list
-void pop(Node** head)
-{
-    Node* temp = *head;
-    (*head) = (*head)->next;
-    free(temp);
-}
- 
-// Function to push according to priority
-void push(Node** head, fptr f, int p)
+
+void DereasePriorities(Node** head)
 {
     Node* start = (*head);
-
-    // Create new Node
-    Node* temp = newNode(f, p);
- 
-    if(!isEmpty(head))
+    while(start->next != NULL)
     {
-        // Special Case: The head of list has lesser
-        // priority than new node. So insert new
-        // node before head node and change head node.
-        if ((*head)->priority > p) {
-     
-            // Insert New Node before head
-            temp->next = *head;
-            (*head) = temp;
-        }
-        else {
-     
-            // Traverse the list and find a
-            // position to insert new node
-            while (start->next != NULL &&
-                start->next->priority < p) {
-                start = start->next;
-            }
-     
-            // Either at the ends of the list
-            // or at required position
-            temp->next = start->next;
-            start->next = temp;
-        }
+        start->priority--;
+        start = start->next;
     }
-    else
-    {
-        (*head) = temp;
-    }
-    
 }
  
-// Function to check is list is empty
-int isEmpty(Node** head)
+ 
+void f1(void) {
+    printf("1\n");
+}
+void f2(void) {
+    printf("2\n");
+}
+void f3(void) {
+    printf("3\n");
+}
+// Driver code
+int main()
 {
-    return (*head) == NULL;
+    // Create a Priority Queue
+    // fn1->fn2->fn3
+    Node* pq = Init();
+        
+    QueTask(&pq, f1, 1);
+    QueTask(&pq, f2, 2);
+    QueTask(&pq, f3, 3);
+    
+
+  while (!isEmpty(&pq)) {
+        Dispatch(&pq);
+    }
+    return 0;
 }
-
-
-
-#endif
