@@ -1,27 +1,31 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "queue.h"
+#include "rqueue.h"
+#include "dqueue.h"
 
 Node* ReadyQ;
-Node* DelayedQ;
+NodeD* DelayedQ;
+Node* CurrentTask;
 
-void Dispatch();
-void QueTask(fptr f, int p);
 void Init(void);
+void QueTask(fptr f, int p);
+void ReRunMe (int d);
+void Dispatch();
 void DereasePriorities();
 int PendingTasks(); //to return whether there are pending tasks or not
+
 
 void f1(void);
 void f2(void);
 void f3(void);
 
-
-void Dispatch()
+void Init()
 {
-    fptr e;
-    e = peek(&ReadyQ);
-    pop(&ReadyQ);
-    (*e)();
+    ReadyQ = (Node*)malloc(sizeof(Node));
+    DelayedQ = (NodeD*)malloc(sizeof(NodeD));
+    CurrentTask = (Node*)malloc(sizeof(Node));
+    ReadyQ = NULL;
+    DelayedQ = NULL;
 }
 
 void QueTask(fptr f, int p)
@@ -29,20 +33,27 @@ void QueTask(fptr f, int p)
     push(&ReadyQ, f, p);
 }
 
-void Init()
+void ReRunMe(int d)
 {
-    ReadyQ = (Node*)malloc(sizeof(Node));
-    DelayedQ = (Node*)malloc(sizeof(Node));
-    ReadyQ = NULL;
-    DelayedQ = NULL;
+    fptr f = CurrentTask->fn;
+    int p = CurrentTask->priority;
+    pushD(&DelayedQ, f, p, d);
+}
+
+void Dispatch()
+{
+    CurrentTask = peek(&ReadyQ);
+    fptr e = CurrentTask->fn;
+    pop(&ReadyQ);
+    (*e)();
 }
 
 void DereasePriorities()
 {
-    Node* start = DelayedQ;
+    NodeD* start = DelayedQ;
     while(start->next != NULL)
     {
-        start->priority--;
+        start->delay--;
         start = start->next;
     }
 }
