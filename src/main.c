@@ -2,45 +2,54 @@
 #include <stdlib.h>
 #include "queue.h"
 
-void Dispatch(Node** head);
-void QueTask(Node** head,fptr f, int p);
-Node* Init(void);
-void DereasePriorities(Node** head);
+Node* ReadyQ;
+Node* DelayedQ;
+
+void Dispatch();
+void QueTask(fptr f, int p);
+void Init(void);
+void DereasePriorities();
+int PendingTasks(); //to return whether there are pending tasks or not
 
 void f1(void);
 void f2(void);
 void f3(void);
 
 
-void Dispatch(Node** head)
+void Dispatch()
 {
     fptr e;
-    e = peek(head);
-    pop(head);
+    e = peek(&ReadyQ);
+    pop(&ReadyQ);
     (*e)();
 }
 
-void QueTask(Node** head,fptr f, int p)
+void QueTask(fptr f, int p)
 {
-    push(head, f, p);
+    push(&ReadyQ, f, p);
 }
 
-Node* Init(void)
+void Init()
 {
-    Node* temp = (Node*)malloc(sizeof(Node));
-    temp = NULL;
-    
-    return temp;
+    ReadyQ = (Node*)malloc(sizeof(Node));
+    DelayedQ = (Node*)malloc(sizeof(Node));
+    ReadyQ = NULL;
+    DelayedQ = NULL;
 }
 
-void DereasePriorities(Node** head)
+void DereasePriorities()
 {
-    Node* start = (*head);
+    Node* start = DelayedQ;
     while(start->next != NULL)
     {
         start->priority--;
         start = start->next;
     }
+}
+
+int PendingTasks()
+{
+    return !isEmpty(&ReadyQ);
 }
  
  
@@ -58,15 +67,15 @@ int main()
 {
     // Create a Priority Queue
     // fn1->fn2->fn3
-    Node* pq = Init();
+    Init();
         
-    QueTask(&pq, f1, 1);
-    QueTask(&pq, f2, 2);
-    QueTask(&pq, f3, 3);
+    QueTask(f1, 1);
+    QueTask(f2, 2);
+    QueTask(f3, 3);
     
 
-  while (!isEmpty(&pq)) {
-        Dispatch(&pq);
+  while (PendingTasks()) {
+        Dispatch();
     }
     return 0;
 }
