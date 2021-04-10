@@ -56,6 +56,15 @@ void DereasePriorities()
         start->delay--;
         start = start->next;
     }
+    while (DelayedQ->delay == 0)
+    {
+        NodeD* ReadyTask = peekD(&DelayQ);
+        popD(&DelayQ);
+        fptr f = ReadyTask->fn;
+        int p = ReadyTask->priority;
+        push(&ReadyQ, f, p);
+    }
+        
 }
 
 int PendingTasks()
