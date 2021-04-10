@@ -6,7 +6,6 @@
  
 // Node
 typedef void (*fptr)(void);
-
 typedef struct node {
     
 	  fptr fn;
@@ -14,17 +13,13 @@ typedef struct node {
     int priority;
  
     struct node* next;
- 
 } Node;
  
-
 Node* newNode(fptr f, int p);
 Node* peek(Node** head);
 void pop(Node** head);
 void push(Node** head, fptr f, int p);
 int isEmpty(Node** head);
-
-
 
 // Function to Create A New Node
 Node* newNode(fptr f, int p)
@@ -51,7 +46,6 @@ void pop(Node** head)
     (*head) = (*head)->next;
     free(temp);
 }
- 
 // Function to push according to priority
 void push(Node** head, fptr f, int p)
 {
@@ -79,7 +73,6 @@ void push(Node** head, fptr f, int p)
                 start->next->priority < p) {
                 start = start->next;
             }
-     
             // Either at the ends of the list
             // or at required position
             temp->next = start->next;
@@ -89,8 +82,7 @@ void push(Node** head, fptr f, int p)
     else
     {
         (*head) = temp;
-    }
-    
+    } 
 }
  
 // Function to check is list is empty
@@ -98,7 +90,4 @@ int isEmpty(Node** head)
 {
     return (*head) == NULL;
 }
-
-
-
 #endif
