@@ -85,6 +85,7 @@ The purpose of this application is to Read the ambient temperature using DS3231 
 * External LED
 * USB-to-Micro USB Cable
 * USB-to-TTL module
+
 A demo video can be found on this [link](https://drive.google.com/file/d/1nIUwM6BlCmE9mzA0jO9ZRASUDnlilATA/view?usp=sharing).
 
 ### Parking Sensor Application: 
