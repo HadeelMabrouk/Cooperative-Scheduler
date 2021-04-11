@@ -23,6 +23,7 @@
 #include "stm32l4xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "scheduler.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -58,6 +59,10 @@
 /* External variables --------------------------------------------------------*/
 extern TIM_HandleTypeDef htim2;
 /* USER CODE BEGIN EV */
+extern Node* ReadyQ;
+extern NodeD* DelayedQ;
+extern fptr CurrentTaskAddress;
+extern int CurrentTaskPriority;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -187,7 +192,7 @@ void SysTick_Handler(void)
   /* USER CODE END SysTick_IRQn 0 */
   HAL_IncTick();
   /* USER CODE BEGIN SysTick_IRQn 1 */
-
+	DecreasePriorities();
   /* USER CODE END SysTick_IRQn 1 */
 }
 
