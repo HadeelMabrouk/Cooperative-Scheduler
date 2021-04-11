@@ -53,6 +53,7 @@ uint8_t tempDataFrac [2], tempDataInt [2],ctrlBuffer[2],statusBuffer[2];
 char outTempInt[]="000";
 char outTempFrac[]="00";
 uint8_t c[]=".\r\n";
+uint8_t startMessage[] = "Please, enter the theshold temperature value = ";
 uint8_t thesholdMessage[] = "Theshold Temperature Value = ";
 uint8_t currentTempMessage[] = "Current Temperature Value = ";
 char thresholdInput[]="00000";
@@ -88,21 +89,26 @@ void SensorSetting(void)
 	 
 	 // ctrl
 	 ctrlBuffer[0] = 0x0E; //register address
-	 ctrlBuffer[1] = 0x3D; //enable A1IE and INTCN bits
-	 // status
-	 statusBuffer[0] = 0x0F; //register address
-	 statusBuffer[1] = 0x88; 
-	 HAL_I2C_Master_Transmit(&hi2c1, 0xD0, statusBuffer, 2, 10);
+	 ctrlBuffer[1] = 0x3C; //enable CONV and INTCN bits
 }
 	
 void ReadThreshold(void)
 {
 		//take threshold input
-	 HAL_UART_Receive(&huart2,(uint8_t*)thresholdInput, 5, HAL_MAX_DELAY);
+	 HAL_UART_Transmit(&huart2,startMessage, 47, 10);
+	 for(int i=0;i<5;i++)
+	 {
+		 HAL_UART_Receive(&huart2,(uint8_t*)&thresholdInput[i], 1, HAL_MAX_DELAY);
+		 HAL_UART_Transmit(&huart2,(uint8_t*)&thresholdInput[i], 1, HAL_MAX_DELAY);
+	 }
+
+	 HAL_UART_Transmit(&huart2,&c[1], 2, 10);
 	 HAL_UART_Transmit(&huart2,thesholdMessage, 29, 10);
 	 HAL_UART_Transmit(&huart2,(uint8_t*)thresholdInput, 5, HAL_MAX_DELAY);
 	 HAL_UART_Transmit(&huart2,&c[1], 2, 10);
-	 threshold = atoi(thresholdInput);
+	 
+	 //get the threshold as a decimal numerical value
+	 threshold = atof(thresholdInput);
 	 QueTask(CheckTemprature,3);
 }
 
@@ -111,23 +117,23 @@ void CheckTemprature(void)
 		 HAL_I2C_Master_Transmit(&hi2c1, 0xD0, ctrlBuffer, 2, 10);
      //send registers addresses to read from
 		 HAL_I2C_Master_Transmit(&hi2c1, 0xD0, tempDataFrac, 1, 10);
-		 HAL_I2C_Master_Receive(&hi2c1, 0xD1, tempDataFrac+1, 1, 10);
+		 HAL_I2C_Master_Receive(&hi2c1, 0xD1, tempDataFrac+1, 1, 10); //to read the fractional portion
 		 HAL_I2C_Master_Transmit(&hi2c1, 0xD0, tempDataInt, 1, 10);
-		 HAL_I2C_Master_Receive(&hi2c1, 0xD1, tempDataInt+1, 1, 10);
+		 HAL_I2C_Master_Receive(&hi2c1, 0xD1, tempDataInt+1, 1, 10); //to read the integer portion
 		
 		 currentTemperature = tempDataInt[1] + (tempDataFrac[1]>>6)*0.25;
 		 
-		 //print current temperature
+		 //print current temperature for verifying purposes
 		 //prepare UART output
 		 sprintf(outTempInt,"%d",tempDataInt[1]);
 		 sprintf(outTempFrac,"%d",(tempDataFrac[1]>>6)*25);
 
 		 // transmit time to UART
-	   HAL_UART_Transmit(&huart2,currentTempMessage, 28, 10);
+	  /* HAL_UART_Transmit(&huart2,currentTempMessage, 28, 10);
 		 HAL_UART_Transmit(&huart2,(uint8_t*)outTempInt, sizeof(outTempInt), 10);
 		 HAL_UART_Transmit(&huart2,&c[0], 1, 10);
 		 HAL_UART_Transmit(&huart2,(uint8_t*)outTempFrac, sizeof(outTempFrac), 10);
-		 HAL_UART_Transmit(&huart2,&c[1], 2, 10);
+		 HAL_UART_Transmit(&huart2,&c[1], 2, 10);*/
 		
 		 alarm = (currentTemperature>threshold);
 		 ReRunMe(600);
