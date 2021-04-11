@@ -38,7 +38,7 @@ void Dispatch(void)
 
 }
 
-void DecreasePriorities(void)
+void DelayedQueueUpdate(void)
 {
     NodeD* start = DelayedQ;
     while(start != NULL)
