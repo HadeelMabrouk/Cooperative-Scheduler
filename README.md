@@ -67,7 +67,7 @@ The purpose of this application is to Read the ambient temperature using DS3231 
       * I2C: I2C
       * Enable PB0 as GPIO_Output
       
- ![GitHub Logo](/Report/imgs/AmpientTemperature_STM32.PNG)
+ ![AmpientTemperature STM32](/Report/imgs/AmpientTemperature_STM32.PNG)
 
 * After Code Generation:
   * In Core > Src: 
@@ -89,6 +89,9 @@ The purpose of this application is to Read the ambient temperature using DS3231 
 * USB-to-Micro USB Cable
 * USB-to-TTL module
 
+Below, is an image of how the connections should look like
+ ![AmpientTemperature Hardware](/Report/imgs/AmpientTemperature_hardware.PNG)
+ 
 A demo video can be found on this [link](https://drive.google.com/file/d/1nIUwM6BlCmE9mzA0jO9ZRASUDnlilATA/view?usp=sharing).
 
 ### Parking Sensor Application: 
