@@ -43,7 +43,9 @@
 
 /* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef htim2;
+
 UART_HandleTypeDef huart1;
+
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -53,7 +55,6 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_TIM2_Init(void);
-
 /* USER CODE BEGIN PFP */
 void ReadDistance(void);
 void ToggleBuzzer(void);
@@ -105,17 +106,17 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   MX_TIM2_Init();
-	
   /* USER CODE BEGIN 2 */
-  QueTask(ReadDistance,1);   //task 1 enqueue
-  QueTask(ToggleBuzzer,2);	//task 2 enqueue
+	QueTask(ReadDistance,1);//task 1 enqueue
+	QueTask(ToggleBuzzer,2);//task 2 enqueue
   /* USER CODE END 2 */
 
   /* Infinite loop */
-  /* USER CODE BEGIN WHILE */	
+  /* USER CODE BEGIN WHILE */
   while (1)
   {
     /* USER CODE END WHILE */
+
     /* USER CODE BEGIN 3 */
 	Dispatch();	
   }
@@ -183,7 +184,7 @@ void SystemClock_Config(void)
   /** Enable MSI Auto calibration
   */
   HAL_RCCEx_EnableMSIPLLMode();
-	HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/20); //to generate a tick every 50ms
+	HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/20);
 }
 
 /**
@@ -204,11 +205,11 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE BEGIN TIM2_Init 1 */
 
-  /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 80-1;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim2.Init.Period = 99999;
+	/* USER CODE END TIM2_Init 1 */
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
@@ -306,6 +307,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(Trig_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : echo_Pin */
+  GPIO_InitStruct.Pin = echo_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(echo_GPIO_Port, &GPIO_InitStruct);
+
   /*Configure GPIO pin : PB5 */
   GPIO_InitStruct.Pin = GPIO_PIN_5;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -327,43 +334,43 @@ void ToggleBuzzer(void)
 	else{
 		//turn off the alarm buzzer
 		HAL_GPIO_WritePin(GPIOB,GPIO_PIN_5,0);   
-		ReRunMe(50);
+		ReRunMe(30);
 	}
 }
 // reading the distance between the sensor and the object
-void readDistance(void){
+void ReadDistance(void){
 		HAL_GPIO_WritePin(Trig_GPIO_Port,Trig_Pin,GPIO_PIN_RESET);
 		HAL_Delay(2);
 	//Transmitting 10 uSec from the trig pin
 		HAL_GPIO_WritePin(Trig_GPIO_Port, Trig_Pin,GPIO_PIN_SET);  
 		HAL_Delay(10);
-	// resetting the trig to 0 after 10 uSec
+	//resetting the trig to 0 after 10 uSec
 		HAL_GPIO_WritePin(Trig_GPIO_Port, Trig_Pin,GPIO_PIN_RESET);
 		
 	//recieving the echo from TIM2 and counting the duration between the rising and falling edges
 		HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_1);
-		uint32_t startTick = HAL_GetTick();   //start counting
+		uint32_t startTick = HAL_GetTick();//start counting
 		
-		while((HAL_GetTick() - startTick) < 1000)  //waits 1sec to recieve echo
+		while((HAL_GetTick() - startTick) < 1000)//waits 1sec to recieve echo
 		{
 			if(echoFlag)
 				break;
 		}
 		echoFlag = 0;
-		HAL_TIM_IC_Stop_IT(&htim2, TIM_CHANNEL_1);  //stop counting
+		HAL_TIM_IC_Stop_IT(&htim2, TIM_CHANNEL_1);//stop counting
 		
-		//Calculating the distance in cm
+	//Calculating the distance in cm
 		if(fallEdge > riseEdge)
 		{
-			distance = ((fallEdge - riseEdge) + 0.0f)*0.0343/2; //distance = time * speed of sound/2
-			buzzerDuration= (int)distance;                      //varing the buzzer
+			distance = ((fallEdge - riseEdge) + 0.0f)*0.0343/2;//distance = time * speed of sound/2
+			buzzerDuration= (int)distance;//varing the buzzer
 			
 			//print the distance using UART1
 			//UNCOMMENT THIS PART TO USE TERA TERM
-			/*
+			
 			sprintf(print, "Distance is = %.1f\r\n", distance);
 			HAL_UART_Transmit(&huart1, (uint8_t *)print, strlen(print), 100);
-			*/
+			
 		}
 		else // if the rising edge is equal to the falling edge
 		{
@@ -371,7 +378,7 @@ void readDistance(void){
 		}
 		//assigning the duration of the buzzer according to the distance
 		toggleBuzzer= (distance<1000);   
-		ReRunMe(100);
+		ReRunMe(40);
 }
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
