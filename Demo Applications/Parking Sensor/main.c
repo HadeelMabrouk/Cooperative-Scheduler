@@ -334,7 +334,7 @@ void ToggleBuzzer(void)
 // reading the distance between the sensor and the object
 void ReadDistance(void){
 		HAL_GPIO_WritePin(Trig_GPIO_Port,Trig_Pin,GPIO_PIN_RESET);
-		HAL_Delay(2);
+		HAL_Delay(1);
 	//Transmitting 10 uSec from the trig pin
 		HAL_GPIO_WritePin(Trig_GPIO_Port, Trig_Pin,GPIO_PIN_SET);  
 		HAL_Delay(10);
@@ -372,7 +372,7 @@ void ReadDistance(void){
 		}
 		//assigning the duration of the buzzer according to the distance
 		toggleBuzzer= (distance<1000);   
-		ReRunMe(40);
+		ReRunMe(29);
 }
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
