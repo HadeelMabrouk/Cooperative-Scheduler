@@ -147,6 +147,9 @@ The purpose of this application is to read the distance between the ultrasonic s
 * USB-to-Micro USB Cable
 * USB-to-TTL module 
 
+Below, is an image of how the connections should look like.
+ ![ParkingSensor Hardware](/Report/imgs/ParkingSensor_hardware.jpg)
+
 A couple of demo videos can be found on those links: 
 * [General Demo](https://drive.google.com/file/d/1LAAoNxJ6oAs0NF2GnNDPjfgFCC4TiObj/view?usp=drivesdk)
 * [Displaying Distance Demo](https://drive.google.com/file/d/1L4y7fJ-y0T_TwSVyQH2CVjmV806OZm0N/view?usp=drivesdk)
