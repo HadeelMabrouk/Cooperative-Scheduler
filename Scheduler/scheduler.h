@@ -8,7 +8,7 @@ void Init(void);
 void QueTask(fptr f, int p);
 void ReRunMe (int d);
 void Dispatch(void);
-void DecreasePriorities(void);
+void DelayedQueueUpdate(void);
 int PendingTasks(void); //to return whether there are pending tasks or not
 
 #endif
