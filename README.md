@@ -5,7 +5,7 @@ The purpose of this project is to develop a cooperative scheduler for embedded s
 ### Ready Queue: 
 It is mainly a linked list of nodes, where each node is composed of a pointer of the ready task, and its priority. Enqueuing and Dequeuing to and from the ready queue can be done using QueTask() and Dispatch() respectively.
 ### Delayed Queue: 
-It is a linked list of nodes, where each node is composed of a pointer of the delayed task, its original priority, and its associated delay. Enqueuing a task in this queue can be done using ReRunMe() passing the desired delay.  The tasks are sorted in a descending order based on the delay value, which is decremented every 50 ms using SysTick Timer using DelayedQueueUpdate() routine. Whenever the delay of the task at the head of the Delayed Queue is 0, it gets popped from the Delayed Queue and pushed to the Ready Queue again. Note that DelayedQueueUpdate() routine gets executed inside the ISR of the SysTick_Handler.
+It is a linked list of nodes, where each node is composed of a pointer of the delayed task, its original priority, and its associated delay. Enqueuing a task in this queue can be done using ReRunMe() passing the desired delay.  The tasks are sorted in a descending order based on the delay value, which is decremented every 50 ms using SysTick Timer using DelayedQueueUpdate() function. Whenever the delay of the task at the head of the Delayed Queue is 0, it gets popped from the Delayed Queue and pushed to the Ready Queue again. Note that DelayedQueueUpdate() function gets executed inside the ISR of the SysTick_Handler.
 ### How to Integrate the Scheduler in Your Application:
 After Code Generation:
 * In Core > Src: Add the .c files in the Scheduler Directory.
@@ -139,7 +139,7 @@ The purpose of this application is to read the distance between the ultrasonic s
   * In Core > Inc:
     * Add the .h files in Scheduler Directory.
 * __TeraTerm (Optional)__: 
-    * Uncomment the Tera Term code
+    * Uncomment the TeraTerm code.
     * Open TeraTerm application, and establish a new serial connection to USB-to-Serial Comm Port.
 * Build the project, and load it on the Nucleo-32 Board.
 * Place an object in front of the ultrasonic sensor and vary the distance.
