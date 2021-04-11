@@ -67,7 +67,8 @@ The purpose of this application is to Read the ambient temperature using DS3231 
       * I2C: I2C
       * Enable PB0 as GPIO_Output
       
- [picture alt](https://drive.google.com/file/d/1LZp_GQ-FmIguya9j8rqb6x-C0D7D-75b/view?usp=sharing "configuration")
+ ![GitHub Logo](/Report/imgs/AmpientTemperature_STM32.PNG)
+
 * After Code Generation:
   * In Core > Src: 
     * Add the files in Demo Applications > Ambient Temperature Monitor
