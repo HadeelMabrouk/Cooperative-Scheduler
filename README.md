@@ -41,7 +41,7 @@ A simple application composed of one task that toggles User LED (LD3), and uses 
 The purpose of this application is to Read the ambient temperature using DS3231 RTC (over I2C bus) sensor every 30 sec, and then produce an alarm through an external LED flashing when the temperature exceeds a threshold that is given by the user through TeraTerm terminal emulator using an asynchronous serial link (UART2) connected via a USB-to-TTL module. 
 #### Design:
 * _Tasks_:
-  * Sensor Setting: to set the temperature integer and fractional partion register addresses, as well as the control register.
+  * Sensor Setting: to set the temperature integer and fractional portion register addresses, as well as the control register.
   * Read Threshold: to read the desired temperature threshold value from the user from using UART2.
   * Check Temperature: to periodically check the ambient temperature every 30 seconds, and set the alarm flag if it exceeds the threshold value.
   * Toggle LED: to flash the external LED in case of an alarm.
@@ -76,7 +76,7 @@ The purpose of this application is to Read the ambient temperature using DS3231 
   * In Core > Inc:
     * Add the .h files in the Scheduler Directory.
 * _TeraTerm_:
-  * Open TeraTerm application, and establish a new serial connection to  USB-to-Serial Comm Port.
+  * Open TeraTerm application, and establish a new serial connection to USB-to-Serial Comm Port.
   * From Setup > Serial port.. > adjust the speed to be equal to the Baud Rate (115200).
 * Build the project, and load it on the Nucleo-32 Board.
 * Enter the threshold value (the user has a buffer of 5 characters, they can use 2 digits for the integer and fractional partions each, separated by a dot).
@@ -104,6 +104,7 @@ The purpose of this application is to read the distance between the ultrasonic s
 * _Logic_:
   * ReadDistance and ToggleBuzzer tasks are enqueued at the beginning of the program, with a priority of 1 and 2 respectively.
   * Then, the ReadDistance task reruns itself every 2 seconds, and the Toggle LED task reruns itself according to the new value of the distance.
+  * To generate the tick interrupts every 50 ms, we used the  following command in the SystemClock_Config() function in main.c: HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/20);
 
 
 #### How to Build and Run:
@@ -118,9 +119,10 @@ The purpose of this application is to read the distance between the ultrasonic s
     * Connectivity > USART1
       * Mode: Asynchronous 
       * Baud Rate: 9600
-    * TIM2:
+    * TIM2(General Purpose Timer):
       * Clock Source: Internal Clock 
       * Channel1: Input Capture Direct Mode
+      * Polarity Selection: Both Edges
     * Enable PB5 as GPIO_Output
     * Enable PA1 as GPIO_Output and label it Trig
     
@@ -134,10 +136,10 @@ The purpose of this application is to read the distance between the ultrasonic s
     * Add the .h files in Scheduler Directory
 * _TeraTerm (Optional)_: 
     * Uncomment the Tera Term code
-    * Open TeraTerm application, and establish a new serial connection to  USB-to-Serial Comm Port.
+    * Open TeraTerm application, and establish a new serial connection to USB-to-Serial Comm Port.
 * Build the project, and load it on the Nucleo-32 Board.
 * Place an object in front of the ultrasonic sensor and vary the distance.
-* Notice change in duration of the beeps reflecting the distance
+* Notice the change in duration of the beeps reflecting the distance.
 
 
 #### Hardware Components:
