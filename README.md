@@ -22,18 +22,18 @@ A simple application composed of one task that toggles User LED (LD3), and uses 
 * __CubeMX Configurations__:
   * From the available boards, select STM32L432KCUx.
   * In Pinout & Configuration tab:
-   * System Core > RCC: 
-    * LSE: Crystal/Ceramic Resonator
-   * System Core > SYS:
-    * Debug: Serial Wire 
-    * Timebase Source: SysTick
-    * Enable PB3 as GPIO_Output
+    * System Core > RCC: 
+      * LSE: Crystal/Ceramic Resonator
+    * System Core > SYS:
+      * Debug: Serial Wire 
+      * Timebase Source: SysTick
+      * Enable PB3 as GPIO_Output
 * __After Code Generation__:
   * In Core > Src: 
-   * Add the files in Unit Tests > ReRunMe Test.
-   * Add the .c files in the Scheduler Directory.
+    * Add the files in Unit Tests > ReRunMe Test.
+    * Add the .c files in the Scheduler Directory.
   * In Core > Inc:
-   * Add the .h files in the Scheduler Directory.
+    * Add the .h files in the Scheduler Directory.
 * Build the project, and load it on the Nucleo-32 Board.
 * Notice the flashing of the User LED (LD3) every 500 ms.
 #### Hardware Components:
@@ -59,26 +59,26 @@ The purpose of this application is to Read the ambient temperature using DS3231 
 * __CubeMX Configurations__:
   * From the available boards, select STM32L432KCUx.
   * In Pinout & Configuration tab:
-   * System Core > RCC: 
-    * LSE: Crystal/Ceramic Resonator
-   * System Core > SYS:
-    * Debug: Serial Wire 
-    * Timebase Source: SysTick
-   * Connectivity > USART2
-    * Mode: Asynchronous 
-    * Baud Rate: 115200 (8N1)
-   * Connectivity > I2C1
-    * I2C: I2C
+    * System Core > RCC: 
+       * LSE: Crystal/Ceramic Resonator
+    * System Core > SYS:
+       * Debug: Serial Wire 
+       * Timebase Source: SysTick
+    * Connectivity > USART2
+      * Mode: Asynchronous 
+      * Baud Rate: 115200 (8N1)
+    * Connectivity > I2C1
+      * I2C: I2C
     * Enable PB0 as GPIO_Output
       
  ![AmpientTemperature STM32](/Report/imgs/AmpientTemperature_STM32.PNG)
 
 * __After Code Generation__:
   * In Core > Src: 
-   * Add the files in Demo Applications > Ambient Temperature Monitor.
-   * Add the .c files in the Scheduler Directory.
+    * Add the files in Demo Applications > Ambient Temperature Monitor.
+    * Add the .c files in the Scheduler Directory.
   * In Core > Inc:
-   * Add the .h files in the Scheduler Directory.
+    * Add the .h files in the Scheduler Directory.
 * __TeraTerm__:
   * Open TeraTerm application, and establish a new serial connection to USB-to-Serial Comm Port.
   * From Setup > Serial port.. > adjust the speed to be equal to the Baud Rate (115200).
@@ -103,7 +103,7 @@ The purpose of this application is to read the distance between the ultrasonic s
 #### Design:
 * __Tasks__:
   * ReadDistance: to send 10uS Trig and receive Echo from the difference between the rising edge and the falling edge of TIM2 the and calculate the distance between the body and sensor using the equation:
-   * Distance = echo time * speed of sound /2
+    * Distance = echo time * speed of sound /2
   * ToggleBuzzer: toggling the buzzer reflecting the distance between the object and the sensor.
 * __Logic__:
   * ReadDistance and ToggleBuzzer tasks are enqueued at the beginning of the program, with a priority of 1 and 2 respectively.
@@ -115,29 +115,29 @@ The purpose of this application is to read the distance between the ultrasonic s
 * __CubeMX Configurations__:
   * From the available boards, select STM32L432KCUx.
   * In Pinout & Configuration tab:
-   * System Core > RCC: 
-    * LSE: Crystal/Ceramic Resonator
-   * System Core > SYS:
-    * Debug: Serial Wire 
-    * Timebase Source: SysTick
-   * Connectivity > USART1
-    * Mode: Asynchronous 
-    * Baud Rate: 9600
-   * TIM2(General Purpose Timer):
-    * Clock Source: Internal Clock 
-    * Channel1: Input Capture Direct Mode
-    * Polarity Selection: Both Edges
-   * Enable PB5 as GPIO_Output
-   * Enable PA1 as GPIO_Output and label it Trig
+    * System Core > RCC: 
+      * LSE: Crystal/Ceramic Resonator
+    * System Core > SYS:
+      * Debug: Serial Wire 
+      * Timebase Source: SysTick
+    * Connectivity > USART1
+      * Mode: Asynchronous 
+      * Baud Rate: 9600
+    * TIM2(General Purpose Timer):
+      * Clock Source: Internal Clock 
+      * Channel1: Input Capture Direct Mode
+      * Polarity Selection: Both Edges
+    * Enable PB5 as GPIO_Output
+    * Enable PA1 as GPIO_Output and label it Trig
     
  ![ParkingSensor STM32](/Report/imgs/ParkingSensor_STM32.PNG)
  
 * __After Code Generation__:
   * In Core > Src: 
-   * Add the files in Demo Applications > Parking Sensor.
-   * Add the .c files in Scheduler Directory.
+    * Add the files in Demo Applications > Parking Sensor.
+    * Add the .c files in Scheduler Directory.
   * In Core > Inc:
-   * Add the .h files in Scheduler Directory.
+    * Add the .h files in Scheduler Directory.
 * __TeraTerm (Optional)__: 
     * Uncomment the Tera Term code
     * Open TeraTerm application, and establish a new serial connection to USB-to-Serial Comm Port.
