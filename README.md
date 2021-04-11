@@ -121,8 +121,11 @@ The purpose of this application is to read the distance between the ultrasonic s
     * TIM2:
       * Clock Source: Internal Clock 
       * Channel1: Input Capture Direct Mode
-    * Enable PB5, PA1 as GPIO_Output
-
+    * Enable PB5 as GPIO_Output
+    * Ebable PA1 as GPIO_Output and lable it Trig
+    
+ ![ParkingSensor STM32](/Report/imgs/ParkingSensor_STM32.PNG)
+ 
 * After Code Generation:
   * In Core > Src: 
     * Add the files in Demo Applications > Parking Sensor
