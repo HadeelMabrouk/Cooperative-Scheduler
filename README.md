@@ -6,6 +6,10 @@ The purpose of this project is to develop a cooperative scheduler for embedded s
 It is mainly a linked list of nodes, where each node is composed of a pointer of the ready task, and its priority. Enqueuing and Dequeuing to and from the ready queue can be done using QueTask() and Dispatch() respectively.
 ### Delayed Queue: 
 It is a linked list of nodes, where each node is composed of a pointer of the ready task, its original priority, and its delay. Enqueuing a task in this queue can be done using ReRunMe() passing the desired delay.  The tasks are sorted in a descending order based on the delay value, which is decremented every 50 ms using SysTick Timer using DecreasePriorities() routine. Whenever the delay of the task at the head of the delayed queue is 0, it gets popped from the delayed queue and pushed to the ready queue again. Note that DecreasePriorities() routine gets executed inside the ISR of the SysTick_Handler.
+### How to Integrate the Scheduler in Your Application:
+After Code Generation:
+* In Core > Src: Add the .c files in the Scheduler Directory.
+* In Core > Inc: Add the .h files in the Scheduler Directory.
 ### Note: 
 All the following applications and unit tests are implemented using STM32L432KCUx  Nucleo board, and are developed using Keil MDK-ARM V5 IDE and tested with the help of TeraTerm.
 
@@ -15,7 +19,7 @@ A simple C program that tests the functionality of QueTask() and Dispatch() func
 ### ReRunMe Test: 
 A simple application composed of one task that toggles User LED (LD3), and uses ReRunMe(10) to toggle every 500 ms.
 #### How to Build and Run:
-* _CubeMX Configurations_:
+* __CubeMX Configurations__:
   * From the available boards, select STM32L432KCUx.
   * In Pinout & Configuration tab:
     * System Core > RCC: 
@@ -24,7 +28,7 @@ A simple application composed of one task that toggles User LED (LD3), and uses 
       * Debug: Serial Wire 
       * Timebase Source: SysTick
     * Enable PB3 as GPIO_Output
-* _After Code Generation_:
+* __After Code Generation__:
   * In Core > Src: 
     * Add the files in Unit Tests > ReRunMe Test.
     * Add the .c files in the Scheduler Directory.
@@ -40,19 +44,19 @@ A simple application composed of one task that toggles User LED (LD3), and uses 
 ### Ambient Temperature Monitor Application: 
 The purpose of this application is to Read the ambient temperature using DS3231 RTC (over I2C bus) sensor every 30 sec, and then produce an alarm through an external LED flashing when the temperature exceeds a threshold that is given by the user through TeraTerm terminal emulator using an asynchronous serial link (UART2) connected via a USB-to-TTL module. 
 #### Design:
-* _Tasks_:
+* __Tasks__:
   * Sensor Setting: to set the temperature integer and fractional portion register addresses, as well as the control register.
   * Read Threshold: to read the desired temperature threshold value from the user from using UART2.
   * Check Temperature: to periodically check the ambient temperature every 30 seconds, and set the alarm flag if it exceeds the threshold value.
   * Toggle LED: to flash the external LED in case of an alarm.
-* _Logic_:
+* __Logic__:
   * Sensor Setting, Read Threshold, and ToggleLED tasks are enqueued at the beginning of the program, with a priority of 1, 2, and 4 respectively.
   * Then, at the end of the Read Threshold task, Check Temperature gets enqueued with a priority of 3.
   * After that, the Check Temperature task reruns itself every 30 seconds, and the Toggle LED task reruns itself every 250 ms.
   * To generate the tick interrupts every 50 ms, we used the  following command in the SystemClock_Config() function in main.c: HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/20);
 
 #### How to Build and Run:
-* _CubeMX Configurations_:
+* __CubeMX Configurations__:
   * From the available boards, select STM32L432KCUx.
   * In Pinout & Configuration tab:
     * System Core > RCC: 
@@ -69,13 +73,13 @@ The purpose of this application is to Read the ambient temperature using DS3231 
       
  ![AmpientTemperature STM32](/Report/imgs/AmpientTemperature_STM32.PNG)
 
-* _After Code Generation_:
+* __After Code Generation__:
   * In Core > Src: 
     * Add the files in Demo Applications > Ambient Temperature Monitor
     * Add the .c files in the Scheduler Directory.
   * In Core > Inc:
     * Add the .h files in the Scheduler Directory.
-* _TeraTerm_:
+* __TeraTerm__:
   * Open TeraTerm application, and establish a new serial connection to USB-to-Serial Comm Port.
   * From Setup > Serial port.. > adjust the speed to be equal to the Baud Rate (115200).
 * Build the project, and load it on the Nucleo-32 Board.
@@ -97,18 +101,18 @@ A demo video can be found on this [link](https://drive.google.com/file/d/1nIUwM6
 ### Parking Sensor Application: 
 The purpose of this application is to read the distance between the ultrasonic sensor HC-SR04 and accordingly the alarm buzzer will produce a sound reflecting the distance between the object and the ultrasonic sensor 
 #### Design:
-* _Tasks_:
+* __Tasks__:
   * ReadDistance: to send 10uS Trig and receive Echo from the difference between the rising edge and the falling edge of TIM2 the and calculate the distance between the body and sensor using the equation :
   * Distance = echo time * speed of sound /2
   * ToggleBuzzer: toggling the buzzer reflecting the distance between the object and the sensor.
-* _Logic_:
+* __Logic__:
   * ReadDistance and ToggleBuzzer tasks are enqueued at the beginning of the program, with a priority of 1 and 2 respectively.
   * Then, the ReadDistance task reruns itself every 2 seconds, and the Toggle LED task reruns itself according to the new value of the distance.
   * To generate the tick interrupts every 50 ms, we used the  following command in the SystemClock_Config() function in main.c: HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/20);
 
 
 #### How to Build and Run:
-* _CubeMX Configurations_:
+* __CubeMX Configurations__:
   * From the available boards, select STM32L432KCUx.
   * In Pinout & Configuration tab:
     * System Core > RCC: 
@@ -128,13 +132,13 @@ The purpose of this application is to read the distance between the ultrasonic s
     
  ![ParkingSensor STM32](/Report/imgs/ParkingSensor_STM32.PNG)
  
-* _After Code Generation_:
+* __After Code Generation__:
   * In Core > Src: 
     * Add the files in Demo Applications > Parking Sensor
     * Add the .c files in Scheduler Directory
   * In Core > Inc:
     * Add the .h files in Scheduler Directory
-* _TeraTerm (Optional)_: 
+* __TeraTerm (Optional)__: 
     * Uncomment the Tera Term code
     * Open TeraTerm application, and establish a new serial connection to USB-to-Serial Comm Port.
 * Build the project, and load it on the Nucleo-32 Board.
